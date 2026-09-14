@@ -1,4 +1,4 @@
-INTERNATIONAL PRIVATE SECURITY - SITE V4
+INTERNATIONAL PRIVATE SECURITY - SITE V5
 
 STRUCTURA:
 /
@@ -60,3 +60,15 @@ NOUTATI V4:
 - Pagina Avertizare incendiu pune accent pe integrarea cu dispeceratul IPS 24/7/365.
 - Flux incendiu: detectie -> centrala -> dispecerat -> procedura -> pompieri / responsabil obiectiv.
 - Sectiune dedicata pentru monitorizarea alarmelor de incendiu.
+
+
+NOUTATI V5:
+- Meniul mobil este acum un overlay opac real, separat de continutul paginii.
+- Scroll-ul continutului din spatele meniului ramane blocat.
+- CTA-ul "Descopera solutia" are spatiere mai mare fata de descriere pe mobil.
+- Tranzitia dintre Acoperire si Despre noi a fost optimizata pentru mobil.
+- Pe mobil, textul Despre noi apare inaintea siglei, iar sigla este redimensionata.
+- Telefon oficial: +40 729 995 979.
+- Email oficial: office@ipsecurity.ro.
+- Telefonul si emailul sunt linkuri functionale tel:/mailto:.
+- Au fost adaugate butoane rapide de contact pe mobil.
