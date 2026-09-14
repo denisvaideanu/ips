@@ -237,7 +237,7 @@ button, input, textarea { font: inherit; }
 
 /* stats */
 .stats-strip { background:#0a0a0b; border-block:1px solid var(--line); }
-.stats-grid { display:grid; grid-template-columns:repeat(5,1fr); }
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); }
 .stats-grid article { padding:28px clamp(20px, 2vw, 38px); border-right:1px solid var(--line); min-height:104px; display:flex; flex-direction:column; justify-content:center; }
 .stats-grid article:first-child { border-left:1px solid var(--line); }
 .stats-grid b { color:var(--gold-light); font-size:22px; font-family:Oswald; }
@@ -1527,4 +1527,9 @@ button, input, textarea { font: inherit; }
   .service-card .card-link {
     margin-top:24px;
   }
+}
+
+/* V5.2 - stats without public intervention-team count */
+@media (max-width:820px) and (min-width:561px) {
+  .stats-grid article:last-child { grid-column:auto; }
 }

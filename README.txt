@@ -45,7 +45,6 @@ DE COMPLETAT ULTERIOR:
 - Video promo
 - Telefon / email
 - Numar obiective monitorizate
-- Numar echipaje
 - Texte finale aprobate juridic/comercial
 - Formular functional
 - Politica de confidentialitate / cookies
@@ -72,3 +71,6 @@ NOUTATI V5:
 - Email oficial: office@ipsecurity.ro.
 - Telefonul si emailul sunt linkuri functionale tel:/mailto:.
 - Au fost adaugate butoane rapide de contact pe mobil.
+
+V5.2:
+- Eliminat complet numarul echipajelor de interventie din statisticile publice.
