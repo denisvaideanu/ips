@@ -74,3 +74,14 @@ NOUTATI V5:
 
 V5.2:
 - Eliminat complet numarul echipajelor de interventie din statisticile publice.
+
+
+V5.3:
+- Integrate fotografiile furnizate pentru cele 5 categorii de solutii.
+- Supraveghere video -> assets/supraveghere-video.png
+- Efractie -> assets/alarma-efractie.png
+- Avertizare incendiu -> assets/avertizare-incendiu.png
+- Control acces -> assets/control-acces.png
+- Automatizari porti -> assets/automatizari-porti.png
+- Imaginile apar in hero-ul paginii dedicate, cu crop responsive si caption discret.
+- Pe mobil imaginile sunt afisate sub textul principal al paginii.
