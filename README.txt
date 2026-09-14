@@ -91,3 +91,9 @@ V5.4:
 - Adaugat favicon IPS pe toate paginile.
 - Favicon-ul foloseste sigla completa, fara fundal.
 - Incluse variante 16x16, 32x32, ICO, Apple Touch Icon si iconuri pentru telefon.
+
+
+V5.5:
+- Pagina Supraveghere video mentioneaza explicit atat sistemele CCTV clasice, cat si sistemele cu analiza video bazata pe AI.
+- Adaugate exemple de functii AI: detectare persoane, vehicule, patrundere in zone protejate si traversarea limitelor virtuale.
+- Pastrata integrarea cu dispeceratul IPS si interventia pentru paza perimetrala.
