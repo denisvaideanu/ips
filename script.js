@@ -441,13 +441,15 @@
   }
 
   /* ============================================================
-     BACKGROUND MUSIC
+     BACKGROUND MUSIC - V5.10
+     Default ON. We first try audible autoplay. If the browser blocks it,
+     the track starts muted immediately and is unmuted automatically on the
+     visitor's first interaction anywhere on the page.
      ============================================================ */
   const MUSIC_URL =
     'https://audio.soundbreak.ai/980d5807ad05d9ab8f6e91f6b38a5f9b/b288dda860ff65493b01ea10fbf1e10c.mp3';
 
-  const MUSIC_PREF_KEY = 'ipsAmbientMusicV58';
-  const MUSIC_TIME_KEY = 'ipsAmbientMusicTimeV58';
+  const MUSIC_TIME_KEY = 'ipsAmbientMusicTimeV510';
   const TARGET_VOLUME = 0.32;
 
   const audio = document.createElement('audio');
@@ -456,35 +458,33 @@
   audio.loop = true;
   audio.preload = 'auto';
   audio.playsInline = true;
-  audio.volume = 0;
+  audio.autoplay = true;
+  audio.volume = TARGET_VOLUME;
   document.body.appendChild(audio);
 
-  // V5.6-style button, restored without the old startup modal.
   const musicControl = document.createElement('button');
   musicControl.className = 'ips-music-toggle';
   musicControl.type = 'button';
   musicControl.setAttribute('aria-label', 'Opreste muzica ambientala');
-  musicControl.setAttribute('aria-pressed', 'false');
+  musicControl.setAttribute('aria-pressed', 'true');
   musicControl.innerHTML = `
     <span class="ips-music-icon" aria-hidden="true">
       <span></span><span></span><span></span><span></span>
     </span>
     <span class="ips-music-copy">
       <strong>MUZICA</strong>
-      <small>PORNESTE</small>
+      <small>PORNITA</small>
     </span>
   `;
   document.body.appendChild(musicControl);
 
+  let musicWanted = true;
+  let waitingForInteraction = false;
   let fadeTimer = null;
 
-  // Default = ON. It stays OFF only if the visitor explicitly turned it off.
-  let musicWanted = localStorage.getItem(MUSIC_PREF_KEY) !== 'off';
-  let autoplayBlocked = false;
-
-  function setMusicControlState(isPlaying, blocked = false) {
+  function setMusicControlState(isPlaying, waiting = false) {
     musicControl.classList.toggle('is-playing', isPlaying);
-    musicControl.classList.toggle('needs-action', blocked);
+    musicControl.classList.toggle('needs-action', waiting);
     musicControl.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
     musicControl.setAttribute(
       'aria-label',
@@ -493,23 +493,23 @@
 
     const status = musicControl.querySelector('small');
     if (status) {
-      status.textContent = blocked
-        ? 'PORNESTE'
-        : (isPlaying ? 'PORNITA' : 'OPRITA');
+      status.textContent = isPlaying ? 'PORNITA' : 'OPRITA';
     }
   }
 
-  function fadeMusicTo(target, duration = 300, after = null) {
+  function fadeTo(target, duration = 220, after = null) {
     clearInterval(fadeTimer);
 
     const start = audio.volume;
-    const steps = 12;
+    const steps = 10;
     let step = 0;
 
     fadeTimer = setInterval(() => {
       step += 1;
-      const value = start + (target - start) * (step / steps);
-      audio.volume = Math.max(0, Math.min(1, value));
+      audio.volume = Math.max(
+        0,
+        Math.min(1, start + (target - start) * (step / steps))
+      );
 
       if (step >= steps) {
         clearInterval(fadeTimer);
@@ -521,53 +521,97 @@
 
   function restoreMusicTime() {
     const saved = Number(sessionStorage.getItem(MUSIC_TIME_KEY));
-    if (
-      Number.isFinite(saved) &&
-      saved > 0 &&
-      audio.currentTime < 0.25
-    ) {
+    if (Number.isFinite(saved) && saved > 0 && audio.currentTime < 0.25) {
       try {
         audio.currentTime = saved;
       } catch (_) {}
     }
   }
 
-  async function startMusic({ remember = false, userAction = false } = {}) {
-    musicWanted = true;
-    if (remember) localStorage.setItem(MUSIC_PREF_KEY, 'on');
+  async function tryAudibleAutoplay() {
+    if (!musicWanted) return false;
 
     restoreMusicTime();
-    audio.preload = 'auto';
+    audio.muted = false;
+    audio.volume = TARGET_VOLUME;
 
     try {
       await audio.play();
-      autoplayBlocked = false;
-      fadeMusicTo(TARGET_VOLUME, userAction ? 240 : 420);
+      waitingForInteraction = false;
       setMusicControlState(true, false);
       return true;
     } catch (_) {
-      autoplayBlocked = true;
-      setMusicControlState(false, true);
       return false;
     }
   }
 
-  function stopMusic({ remember = true } = {}) {
+  async function startMutedFallback() {
+    if (!musicWanted) return;
+
+    restoreMusicTime();
+    audio.muted = true;
+    audio.volume = TARGET_VOLUME;
+
+    try {
+      await audio.play();
+      waitingForInteraction = true;
+      // The track is already advancing silently. The first interaction
+      // simply unmutes it, avoiding a delayed start or restart.
+      setMusicControlState(true, true);
+    } catch (_) {
+      waitingForInteraction = true;
+      setMusicControlState(false, true);
+    }
+  }
+
+  async function startMusicFromUserAction() {
+    if (!musicWanted) return;
+
+    restoreMusicTime();
+
+    try {
+      audio.muted = false;
+      audio.volume = TARGET_VOLUME;
+
+      if (audio.paused) {
+        await audio.play();
+      }
+
+      waitingForInteraction = false;
+      setMusicControlState(true, false);
+      removeUnlockListeners();
+    } catch (_) {
+      setMusicControlState(false, true);
+    }
+  }
+
+  function stopMusic() {
     musicWanted = false;
-    autoplayBlocked = false;
+    waitingForInteraction = false;
+    removeUnlockListeners();
 
-    if (remember) localStorage.setItem(MUSIC_PREF_KEY, 'off');
+    fadeTo(0, 180, () => {
+      audio.pause();
+      audio.muted = false;
+      audio.volume = TARGET_VOLUME;
+    });
 
-    fadeMusicTo(0, 220, () => audio.pause());
     setMusicControlState(false, false);
   }
 
-  musicControl.addEventListener('click', async () => {
-    if (audio.paused) {
-      await startMusic({ remember: true, userAction: true });
+  async function toggleMusic() {
+    if (!musicWanted || audio.paused || audio.muted) {
+      musicWanted = true;
+      addUnlockListeners();
+      await startMusicFromUserAction();
     } else {
-      stopMusic({ remember: true });
+      stopMusic();
     }
+  }
+
+  musicControl.addEventListener('click', event => {
+    event.stopPropagation();
+    toggleMusic();
   });
 
   audio.addEventListener('timeupdate', () => {
@@ -582,40 +626,41 @@
     }
   });
 
-  // If autoplay with sound is blocked by the browser, start it on the
-  // visitor's first interaction anywhere on the page (without a popup).
-  async function unlockMusicOnInteraction(event) {
-    if (!musicWanted || !autoplayBlocked || !audio.paused) return;
+  async function unlockOnFirstInteraction(event) {
+    if (!musicWanted || !waitingForInteraction) return;
     if (musicControl.contains(event.target)) return;
 
-    const started = await startMusic({ remember: false, userAction: true });
-    if (started) removeUnlockListeners();
+    // This runs in capture phase and therefore fires before internal
+    // navigation handlers. The visitor doesn't need to press the music button.
+    await startMusicFromUserAction();
+  }
+
+  function addUnlockListeners() {
+    document.addEventListener('pointerdown', unlockOnFirstInteraction, true);
+    document.addEventListener('touchstart', unlockOnFirstInteraction, true);
+    document.addEventListener('keydown', unlockOnFirstInteraction, true);
+    document.addEventListener('click', unlockOnFirstInteraction, true);
   }
 
   function removeUnlockListeners() {
-    document.removeEventListener('pointerdown', unlockMusicOnInteraction, true);
-    document.removeEventListener('keydown', unlockMusicOnInteraction, true);
-    document.removeEventListener('touchstart', unlockMusicOnInteraction, true);
+    document.removeEventListener('pointerdown', unlockOnFirstInteraction, true);
+    document.removeEventListener('touchstart', unlockOnFirstInteraction, true);
+    document.removeEventListener('keydown', unlockOnFirstInteraction, true);
+    document.removeEventListener('click', unlockOnFirstInteraction, true);
   }
 
-  document.addEventListener('pointerdown', unlockMusicOnInteraction, true);
-  document.addEventListener('keydown', unlockMusicOnInteraction, true);
-  document.addEventListener('touchstart', unlockMusicOnInteraction, true);
+  addUnlockListeners();
 
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && musicWanted && audio.paused && !autoplayBlocked) {
-      startMusic({ remember: false });
+  // Always ON by default on a fresh load.
+  // 1) Try normal audible autoplay.
+  // 2) If Chrome/Firefox/Safari blocks it, start muted immediately.
+  // 3) First interaction anywhere automatically unmutes it.
+  (async () => {
+    const started = await tryAudibleAutoplay();
+    if (!started) {
+      await startMutedFallback();
     }
-  });
-
-  // Try immediately. Browsers that permit autoplay will start at once.
-  // Browsers that block unmuted autoplay will show PORNESTE and begin
-  // on the first user interaction instead.
-  if (musicWanted) {
-    startMusic({ remember: false });
-  } else {
-    setMusicControlState(false, false);
-  }
+  })();
 
   initCurrentPage(document);
 })();

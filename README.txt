@@ -133,3 +133,13 @@ V5.9:
 - Browserul nu mai trebuie sa incarce un document HTML nou cand se trece intre serviciile site-ului; se inlocuieste doar continutul <main>.
 - Elementul audio si playerul raman montate permanent, deci muzica trebuie sa continue fara pauza.
 - Adaugat cache-busting ?v=5.9 pentru styles.css si script.js ca GitHub Pages / browserul sa nu mai foloseasca JavaScript-ul vechi din cache.
+
+
+V5.10:
+- Muzica este din nou ON implicit la fiecare deschidere noua a site-ului.
+- Nu mai memoram permanent starea OFF din vizite anterioare.
+- Site-ul incearca mai intai autoplay cu sunet.
+- Daca browserul blocheaza autoplay-ul cu sunet, piesa porneste imediat muted si continua sa avanseze.
+- La prima interactiune oriunde pe site (click/touch/tasta), muzica se demuteaza automat; nu trebuie apasat butonul MUZICA.
+- Navigarea fara reload din V5.9 ramane activa, deci redarea continua intre paginile serviciilor.
+- Butonul audio cu designul V5.6 ramane neschimbat.
