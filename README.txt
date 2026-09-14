@@ -85,3 +85,9 @@ V5.3:
 - Automatizari porti -> assets/automatizari-porti.png
 - Imaginile apar in hero-ul paginii dedicate, cu crop responsive si caption discret.
 - Pe mobil imaginile sunt afisate sub textul principal al paginii.
+
+
+V5.4:
+- Adaugat favicon IPS pe toate paginile.
+- Favicon-ul foloseste sigla completa, fara fundal.
+- Incluse variante 16x16, 32x32, ICO, Apple Touch Icon si iconuri pentru telefon.
