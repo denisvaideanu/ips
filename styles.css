@@ -1634,3 +1634,137 @@ button, input, textarea { font: inherit; }
     font-size:17px;
   }
 }
+
+/* ============================================================
+   V5.8 - AMBIENT MUSIC CONTROL
+   V5.6 visual design restored
+   ============================================================ */
+.ips-music-toggle {
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:1500;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:126px;
+  padding:11px 14px;
+  border:1px solid rgba(213,170,76,.38);
+  border-radius:999px;
+  background:rgba(8,8,8,.90);
+  color:#fff;
+  box-shadow:0 12px 34px rgba(0,0,0,.42);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  cursor:pointer;
+  transition:transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.ips-music-toggle:hover {
+  transform:translateY(-2px);
+  border-color:rgba(240,212,122,.72);
+  background:rgba(15,15,15,.96);
+}
+
+.ips-music-toggle:focus-visible {
+  outline:2px solid var(--gold-light);
+  outline-offset:3px;
+}
+
+.ips-music-icon {
+  width:24px;
+  height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+}
+
+.ips-music-icon span {
+  width:2px;
+  height:6px;
+  border-radius:3px;
+  background:var(--gold);
+  opacity:.55;
+  transition:height .2s ease, opacity .2s ease;
+}
+
+.ips-music-toggle.is-playing .ips-music-icon span {
+  opacity:1;
+  animation:ips-eq .82s ease-in-out infinite alternate;
+}
+
+.ips-music-toggle.is-playing .ips-music-icon span:nth-child(2) { animation-delay:.13s; }
+.ips-music-toggle.is-playing .ips-music-icon span:nth-child(3) { animation-delay:.31s; }
+.ips-music-toggle.is-playing .ips-music-icon span:nth-child(4) { animation-delay:.48s; }
+
+.ips-music-toggle.needs-action {
+  border-color:rgba(240,212,122,.78);
+  box-shadow:
+    0 0 0 1px rgba(213,170,76,.16),
+    0 12px 34px rgba(0,0,0,.46),
+    0 0 28px rgba(213,170,76,.10);
+}
+
+.ips-music-copy {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  line-height:1;
+}
+
+.ips-music-copy strong {
+  font-size:10px;
+  letter-spacing:.15em;
+  font-weight:800;
+}
+
+.ips-music-copy small {
+  margin-top:4px;
+  color:var(--gold-light);
+  font-size:8px;
+  letter-spacing:.12em;
+  font-weight:800;
+}
+
+@keyframes ips-eq {
+  0% { height:5px; }
+  35% { height:12px; }
+  100% { height:20px; }
+}
+
+/* Small visual response while a new section/page is fetched.
+   The audio element is NOT touched. */
+html.ips-page-loading main {
+  opacity:.985;
+}
+
+@media (max-width:560px) {
+  .ips-music-toggle {
+    right:14px;
+    bottom:14px;
+    min-width:0;
+    padding:10px 12px;
+  }
+
+  .ips-music-copy strong { font-size:9px; }
+  .ips-music-copy small { font-size:7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ips-music-toggle,
+  .ips-music-icon span {
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
+
+/* V5.9: only page content changes during internal navigation.
+   Header, footer and audio player stay mounted continuously. */
+html[data-ips-persistent-shell="1"] main {
+  transition: opacity .12s ease;
+}
+html[data-ips-persistent-shell="1"].ips-page-loading main {
+  opacity: .985;
+}

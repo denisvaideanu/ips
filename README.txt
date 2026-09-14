@@ -97,3 +97,39 @@ V5.5:
 - Pagina Supraveghere video mentioneaza explicit atat sistemele CCTV clasice, cat si sistemele cu analiza video bazata pe AI.
 - Adaugate exemple de functii AI: detectare persoane, vehicule, patrundere in zone protejate si traversarea limitelor virtuale.
 - Pastrata integrarea cu dispeceratul IPS si interventia pentru paza perimetrala.
+
+
+V5.6:
+- Integrata a doua varianta Calm Night Patrol ca fundal audio ambiental.
+- La prima vizita apare un dialog pentru pornirea muzicii sau continuarea fara sunet.
+- Adaugat buton flotant pentru pornire/oprire pe toate paginile.
+- Volum redus, loop continuu si fade-in/fade-out.
+- Preferinta vizitatorului este memorata; pozitia piesei este pastrata intre paginile aceleiasi sesiuni.
+- Nota: autoplay cu sunet este blocat de majoritatea browserelor pana la o interactiune a utilizatorului.
+
+
+V5.7:
+- Eliminata complet fereastra initiala pentru pornirea/oprirea muzicii.
+- Adaugat buton PLAY mare, auriu si foarte vizibil, fix in coltul dreapta-jos.
+- Cand muzica ruleaza, butonul devine PAUSE.
+- Volumul fundalului a fost marit de la 14% la aproximativ 32%.
+- Pozitia melodiei este pastrata in sesiune, iar site-ul incearca sa continue redarea dupa navigarea intre pagini.
+- Site-ul nu opreste intentionat muzica atunci cand tab-ul browserului devine inactiv.
+
+
+V5.8:
+- Muzica este setata ON implicit si site-ul incearca sa o porneasca imediat la deschidere.
+- Daca browserul blocheaza autoplay-ul cu sunet, muzica porneste la prima interactiune a vizitatorului, fara popup.
+- Restaurat designul butonului audio din V5.6 (egalizator + MUZICA / PORNITA-OPRITA).
+- Navigarea intre paginile interne este acum facuta fara reload complet al documentului.
+- Acelasi element audio ramane activ cand se trece intre Supraveghere video, Efractie, Incendiu, Control acces, Automatizari, Monitorizare, Interventie si homepage.
+- Astfel este eliminata pauza de aproximativ o secunda produsa anterior de reincarcarea fiecarei pagini.
+- Sunt preincarcate in fundal paginile principale pentru navigare mai rapida.
+
+
+V5.9:
+- Corectie pentru intreruperea audio de ~1 secunda la schimbarea paginilor de servicii.
+- Navigarea interna este interceptata acum in faza capture si foloseste o lista explicita a rutelor IPS.
+- Browserul nu mai trebuie sa incarce un document HTML nou cand se trece intre serviciile site-ului; se inlocuieste doar continutul <main>.
+- Elementul audio si playerul raman montate permanent, deci muzica trebuie sa continue fara pauza.
+- Adaugat cache-busting ?v=5.9 pentru styles.css si script.js ca GitHub Pages / browserul sa nu mai foloseasca JavaScript-ul vechi din cache.
