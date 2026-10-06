@@ -342,6 +342,13 @@
         );
       }
 
+      // Keep canonical, social metadata, hreflang and JSON-LD synchronized
+      // when the site changes pages without a full document reload.
+      document.head.querySelectorAll('[data-ips-seo="page"]').forEach(node => node.remove());
+      parsed.head.querySelectorAll('[data-ips-seo="page"]').forEach(node => {
+        document.head.appendChild(node.cloneNode(true));
+      });
+
       if (push) {
         history.pushState({ ipsSpa: true }, '', url.href);
       }
